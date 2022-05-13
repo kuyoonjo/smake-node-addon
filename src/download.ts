@@ -22,7 +22,7 @@ export async function download(name: string, url: string, dist: string) {
       bar.start(100, 0);
       data.on('data', (chunk) => {
         downloadedLength += chunk.length;
-        bar.update(downloadedLength / totalLength * 100);
+        bar.update((downloadedLength / totalLength) * 100);
       });
       data.on('end', () => {
         bar.stop();

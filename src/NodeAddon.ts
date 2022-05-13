@@ -26,11 +26,7 @@ export class NodeAddon extends LLVM {
           '-fPIC',
         ];
       } else if (this.target.includes('windows-msvc')) {
-        this._cxflags = [
-          ...super.cxflags,
-          '-Daddon_EXPORTS',
-          '/EHsc',
-        ];
+        this._cxflags = [...super.cxflags, '-Daddon_EXPORTS', '/EHsc'];
       } else {
         this._cxflags = [
           `--sysroot ${this.sysroot}`,
@@ -41,6 +37,9 @@ export class NodeAddon extends LLVM {
       }
     }
     return this._cxflags;
+  }
+  set cxflags(v) {
+    this._cxflags = v;
   }
 
   get shflags() {
@@ -58,15 +57,15 @@ export class NodeAddon extends LLVM {
           'dynamic_lookup',
         ];
       } else if (this.target.includes('windows-msvc')) {
-        this._shflags = [
-          ...super.shflags,
-          '/DELAYLOAD:NODE.EXE',
-        ];
+        this._shflags = [...super.shflags, '/DELAYLOAD:NODE.EXE'];
       } else {
         this._shflags = super.shflags;
       }
     }
     return this._shflags;
+  }
+  set shflags(v) {
+    this._shflags = v;
   }
 
   get includedirs() {
@@ -91,7 +90,8 @@ export class NodeAddon extends LLVM {
         const cacheDir = join(NODEJS_CACHE_DIR, this.NODE_VERSION);
         this._linkdirs = [
           ...super.linkdirs,
-          `${cacheDir}/lib/${this.target.startsWith('x86_64') ? 'win-x64' : 'win-x86'
+          `${cacheDir}/lib/${
+            this.target.startsWith('x86_64') ? 'win-x64' : 'win-x86'
           }`,
         ];
       } else {
@@ -143,8 +143,7 @@ export class NodeAddon extends LLVM {
         /\\/g,
         '/'
       )}/win_delay_load_hook.cc`;
-      if (!this.files.includes(file))
-        this.files.push(file);
+      if (!this.files.includes(file)) this.files.push(file);
     }
 
     return super.buildObjs();

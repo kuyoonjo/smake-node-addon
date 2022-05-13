@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { createHash } from 'crypto';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'fs';
 import { join, homedir } from '@smake/utils';
 import { extract } from 'tar';
 import { download } from './download';
@@ -11,9 +17,7 @@ export const NODEJS_CACHE_DIR =
     ? join(homedir(), 'AppData', 'Roaming', 'smake', 'nodejs')
     : join(homedir(), '.cache', 'smake', 'nodejs');
 
-export async function downloadNodejs(
-  ver: string = process.version
-) {
+export async function downloadNodejs(ver: string = process.version) {
   const cacheDir = join(NODEJS_CACHE_DIR, ver);
   const mirror =
     process.env.NVM_NODEJS_ORG_MIRROR ||
@@ -43,7 +47,8 @@ export async function downloadNodejs(
   const x64libCached = existsSync(x64libDist);
   const x86libCached = existsSync(x86libDist);
 
-  let noX86 = checksum && !checksum.find((x: any) => x.name.startsWith('win-x86'));
+  let noX86 =
+    checksum && !checksum.find((x: any) => x.name.startsWith('win-x86'));
 
   if (includeDirCached && x64libCached && (noX86 || x86libCached)) return;
 
@@ -59,7 +64,7 @@ export async function downloadNodejs(
     });
   mkdirSync(libDir, { recursive: true });
   writeFileSync(checksumFile, JSON.stringify(data, null, 2));
-  noX86 = !data.find(x => x.name.startsWith('win-x86'));
+  noX86 = !data.find((x) => x.name.startsWith('win-x86'));
 
   if (!includeDirCached) {
     const headersUrl = `${mirror}/${ver}/${headersName}`;
